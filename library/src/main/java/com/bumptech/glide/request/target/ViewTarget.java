@@ -220,8 +220,14 @@ public abstract class ViewTarget<T extends View, Z> extends BaseTarget<Z> {
           cbs.add(cb);
         }
         if (layoutListener == null) {
+          /*
+          * Returns the ViewTreeObserver for this view's hierarchy. The view tree
+          * observer can be used to get notifications when global events, like
+          * layout, happen.
+          * */
           final ViewTreeObserver observer = view.getViewTreeObserver();
           layoutListener = new SizeDeterminerLayoutListener(this);
+          //Register a callback to be invoked when the view tree is about to be drawn
           observer.addOnPreDrawListener(layoutListener);
         }
       }
@@ -244,6 +250,7 @@ public abstract class ViewTarget<T extends View, Z> extends BaseTarget<Z> {
 
     private int getViewHeightOrParam() {
       final LayoutParams layoutParams = view.getLayoutParams();
+      //size > 0 || size == LayoutParams.WRAP_CONTENT;
       if (isSizeValid(view.getHeight())) {
         return view.getHeight();
       } else if (layoutParams != null) {
@@ -266,6 +273,7 @@ public abstract class ViewTarget<T extends View, Z> extends BaseTarget<Z> {
 
     private int getSizeForParam(int param, boolean isHeight) {
       if (param == LayoutParams.WRAP_CONTENT) {
+        //初始化 displayDimens
         Point displayDimens = getDisplayDimens();
         return isHeight ? displayDimens.y : displayDimens.x;
       } else {
